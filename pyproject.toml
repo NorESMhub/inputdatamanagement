@@ -1,0 +1,26 @@
+[project]
+name = "noresm-inputdatamanagement"
+version = "0.1.0"
+description = "command line tool for NorESM input data management on sigma2 ressources"
+authors = [
+    {name = "Jan Griesfeller",email = "jan.griesfeller@met.no"}
+]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+]
+
+[project.urls]
+homepage = "https://github.com/NorESMhub/inputdatamanagement"
+repository = "https://github.com/NorESMhub/inputdatamanagement"
+
+[project.scripts]
+noresm_inputdata = 'noresm_inputdatamanagement.cli.noresm_inputdata:run'
+
+[tool.poetry]
+packages = [{include = "noresm_inputdatamanagement", from = "src"}]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
