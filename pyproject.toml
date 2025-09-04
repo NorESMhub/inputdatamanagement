@@ -1,6 +1,6 @@
 [project]
 name = "noresm-inputdatamanagement"
-version = "0.1.0"
+version = "0.1.2"
 description = "command line tool for NorESM input data management on sigma2 ressources"
 authors = [
     {name = "Jan Griesfeller",email = "jan.griesfeller@met.no"}
@@ -17,10 +17,10 @@ repository = "https://github.com/NorESMhub/inputdatamanagement"
 [project.scripts]
 noresm_inputdata = 'noresm_inputdatamanagement.cli.noresm_inputdata:run'
 
-[tool.poetry]
-packages = [{include = "noresm_inputdatamanagement", from = "src"}]
-
+[tool.setuptools]
+packages = ["noresm_inputdatamanagement", "noresm_inputdatamanagement.cli"]
+package-dir = {"" = "src"}
 
 [build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"

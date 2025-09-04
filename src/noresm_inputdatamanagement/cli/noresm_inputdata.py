@@ -9,6 +9,9 @@ import sys
 from pathlib import Path
 from tempfile import mkdtemp
 
+from noresm_inputdatamanagement.const import SOURCE_PATH, NCAR_COPY_PATH, BACKUP_DESTINATION_PATH
+
+
 
 def run():
     colors = {
