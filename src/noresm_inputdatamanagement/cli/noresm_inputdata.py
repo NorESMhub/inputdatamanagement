@@ -29,7 +29,7 @@ def run():
             formatter_class=argparse.RawDescriptionHelpFormatter,
             epilog=f"""{colors['BOLD']}Example usages:{colors['END']}
     \t{colors['UNDERLINE']}- basic usage:{colors['END']}
-    \t  The following line bla bla }
+    \t  The following line bla bla 
     \t  noresm_inputdata -c blubb
     
     """,

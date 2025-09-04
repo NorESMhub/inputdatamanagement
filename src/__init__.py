@@ -1,1 +1,1 @@
-from .cli import noresm_inputdata
+from . import const
