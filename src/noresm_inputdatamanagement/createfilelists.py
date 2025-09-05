@@ -47,6 +47,8 @@ class CreateFileLists:
         # add the groups
         for _grp in SOURCE_PATH_GROUPS_TO_COPY:
             self.cmd_source_arr = self.cmd_source_arr + ["-group", _grp]
+        # add sersach for files only
+        self.cmd_source_arr = self.cmd_source_arr + ["-type", "f"]
 
         # piece together the command to search for the files in the directory of the NCAR copy
         self.cmd_ncar_arr = self.cmd_ncar_arr + [FIND_CMD, ncardir, "-type", "f"]
