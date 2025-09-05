@@ -1,4 +1,8 @@
-from noresm_inputdatamanagement.const import SOURCE_PATH, NCAR_COPY_PATH, BACKUP_DESTINATION_PATH
+import fnmatch
+
+from noresm_inputdatamanagement.const import SOURCE_PATH, NCAR_COPY_PATH, BACKUP_DESTINATION_PATH, \
+    SOURCE_PATH_BASE_LENGTH, NCAR_COPY_PATH_BASE_LENGTH, BACKUP_DESTINATION_PATH_BASE_LENGTH, SOURCE_PATH_EXCLUDE_LIST
+
 
 class Backup:
     __version__ = "0.0.1"
@@ -10,8 +14,68 @@ class Backup:
         else:
             self.dryrun = False
 
-    def get_file_to_copy(self):
+        # the following is a dictionary with the relative source path as key. and the absolute source path
+        # as value
+        self.source_file_dict = {}
+        # set of source files
+        self.sourcefiles = set()
+        # set of files in the NCAR copy (relative to the NCAR directory)
+        self.ncarfiles = set()
+        # set of files in the destination directory
+        self.backupfiles = set()
+
+    def get_files_to_copy(self, source_path_depth:int = SOURCE_PATH_BASE_LENGTH, ):
         """find files that are in the source file list, but not the NCAR copy """
+
+        # how to do it:
+        # 1) remove files from source file list that are present already at the destination dir
+        # 2) remove files from source file list that are at the NCAR backup location
+
+        backup_files_removed = 0
+        ncar_files_removed = 0
+        for _destfile in self.backupfiles:
+            print(_destfile)
+            if _destfile in self.sourcefiles:
+                self.sourcefiles.remove(_destfile)
+                backup_files_removed += 1
+
+        for _ncarfile in self.ncarfiles:
+            if _ncarfile in self.sourcefiles:
+                self.sourcefiles.remove(_ncarfile)
+                ncar_files_removed += 1
+
+        print(f"Info: {backup_files_removed} source files were found in the backup folder.")
+        print(f"Info: {ncar_files_removed} source files were found in the NCAR archive folder.")
+        print(f"Info: This leaves {len(self.sourcefiles)} source files to be copied.")
+
+        return self.sourcefiles
+
+    def get_rel_paths(self, paths:set[str], dirs_to_ignore:int = 0):
+        """helper routine that removes a given number directories
+        from a set of directories
+
+        """
+        outset = set()
+        for path in paths:
+            tmp_dummy = "/".join(path.split("/")[dirs_to_ignore:])
+            outset.add(tmp_dummy)
+            self.source_file_dict[tmp_dummy] = path
+        return outset
+
+    def remove_excluded_files(self, paths:set[str], exclude_patterns:list[str]):
+        """small helper to remove files matching a list of file patterns
+        from a list / set"""
+
+        ret_set = paths
+        # removals = []
+        for _idx, pattern in enumerate(exclude_patterns):
+            removals = fnmatch.filter(ret_set, pattern)
+            for path in removals:
+                ret_set.remove(path)
+                del self.source_file_dict[path]
+
+        return ret_set
+
 
     def get_file_lists(self):
         """read all necessary file lists, either from the file system or by
@@ -20,21 +84,23 @@ class Backup:
 
         if "sourcefile" in self.options:
             with open(self.options["sourcefile"], "r") as source:
-                self.sourcefiles = set(source.read().splitlines())
+                _tmp = set(source.read().splitlines())
+            self.sourcefiles = self.get_rel_paths(_tmp, self.options["sourceignoredirs"])
+            self.sourcefiles = self.remove_excluded_files(self.sourcefiles, SOURCE_PATH_EXCLUDE_LIST)
         else:
             raise NotImplementedError
 
         if "ncarfile" in self.options:
             with open(self.options["ncarfile"], "r") as ncar:
-                self.ncarfiles = set(ncar.read().splitlines())
+                _tmp = set(ncar.read().splitlines())
+            self.ncarfiles = self.get_rel_paths(_tmp, self.options["ncarignoredirs"])
         else:
             raise NotImplementedError
 
         if "backupfile" in self.options:
             with open(self.options["backupfile"], "r") as backup:
-                self.backupfiles = set(backup.read().splitlines())
+                _tmp = set(backup.read().splitlines())
+            self.backupfiles = self.get_rel_paths(_tmp, self.options["backupignoredirs"])
         else:
             raise NotImplementedError
 
-        if self.dryrun:
-            print("dryrun")
