@@ -10,6 +10,9 @@ class Backup:
         else:
             self.dryrun = False
 
+    def get_file_to_copy(self):
+        """find files that are in the source file list, but not the NCAR copy """
+
     def get_file_lists(self):
         """read all necessary file lists, either from the file system or by
         user provided text files"""
@@ -17,19 +20,19 @@ class Backup:
 
         if "sourcefile" in self.options:
             with open(self.options["sourcefile"], "r") as source:
-                self.sourcefiles = source.read().splitlines()
+                self.sourcefiles = set(source.read().splitlines())
         else:
             raise NotImplementedError
 
         if "ncarfile" in self.options:
             with open(self.options["ncarfile"], "r") as ncar:
-                self.ncarfiles = ncar.read().splitlines()
+                self.ncarfiles = set(ncar.read().splitlines())
         else:
             raise NotImplementedError
 
         if "backupfile" in self.options:
             with open(self.options["backupfile"], "r") as backup:
-                self.backupfiles = backup.read().splitlines()
+                self.backupfiles = set(backup.read().splitlines())
         else:
             raise NotImplementedError
 

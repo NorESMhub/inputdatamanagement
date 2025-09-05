@@ -5,6 +5,9 @@
 
 # path with files to checked if backup is needed
 SOURCE_PATH = "/cluster/shared/noresm/inputdata"
+# default number of directories to ignore in case we get supplied a text file
+# with the files
+SOURCE_PATH_BASE_
 # only files owned by one of these groups are considered for backup
 # will be used for the -group option of the find command
 SOURCE_PATH_GROUPS_TO_COPY = ["noresm"]
