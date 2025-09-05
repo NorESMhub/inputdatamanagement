@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """
-pyaerocom plot: crerate plots using the pyaerocom API
+noresm_inputdata.py
+
+Manage backup of the noresm input data
 """
 
 import argparse
@@ -138,11 +140,6 @@ def run():
         sys.exit(1)
 
 
-    if "search" in args:
-        options["search"] = args.search
-
-
-    pass
 
 if __name__ == "__main__":
     run()
