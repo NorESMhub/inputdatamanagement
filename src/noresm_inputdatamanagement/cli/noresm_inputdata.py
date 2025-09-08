@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """
-pyaerocom plot: crerate plots using the pyaerocom API
+noresm_inputdata.py
+
+Manage backup of the noresm input data
 """
 
 import argparse
@@ -9,7 +11,8 @@ import sys
 from pathlib import Path
 from tempfile import mkdtemp
 
-from noresm_inputdatamanagement.const import SOURCE_PATH, NCAR_COPY_PATH, BACKUP_DESTINATION_PATH
+from noresm_inputdatamanagement.const import SOURCE_PATH, NCAR_COPY_PATH, BACKUP_DESTINATION_PATH, \
+    SOURCE_PATH_BASE_LENGTH, NCAR_COPY_PATH_BASE_LENGTH, BACKUP_DESTINATION_PATH_BASE_LENGTH
 from noresm_inputdatamanagement.createfilelists import CreateFileLists
 from noresm_inputdatamanagement.backup import Backup
 
@@ -58,8 +61,14 @@ def run():
 
     parser_backup.add_argument("--dryrun", help="dryrun; just show what would be done", action="store_true")
     parser_backup.add_argument("--sourcefile", help="text file with paths of the source directory", )
+    parser_backup.add_argument("--sourceignoredirs", help="# of directories in the file list to ignore",
+                               default=SOURCE_PATH_BASE_LENGTH, type=int)
     parser_backup.add_argument("--ncarfile", help="text file with paths of the NCAR backup directory", )
+    parser_backup.add_argument("--ncarignoredirs", help="# of directories in the NCAR file list to ignore",
+                               default=NCAR_COPY_PATH_BASE_LENGTH, type=int)
     parser_backup.add_argument("--backupfile", help="text file with paths of the destination directory", )
+    parser_backup.add_argument("--backupignoredirs", help="# of directories in the backup file list to ignore",
+                               default=BACKUP_DESTINATION_PATH_BASE_LENGTH, type=int)
     parser_backup.add_argument("--sourcedir", help=f"source folder; defaults to {SOURCE_PATH}",
                                  default=SOURCE_PATH)
     parser_backup.add_argument("--ncardir", help=f"NCAR folder; defaults to {NCAR_COPY_PATH}",
@@ -80,10 +89,16 @@ def run():
             backup_options["dryrun"] = False
         if args.sourcedir:
             backup_options["sourcedir"] = args.sourcedir
+        if args.sourceignoredirs:
+            backup_options["sourceignoredirs"] = args.sourceignoredirs
         if args.ncardir:
             backup_options["ncardir"] = args.ncardir
+        if args.ncarignoredirs:
+            backup_options["ncarignoredirs"] = args.ncarignoredirs
         if args.backupdir:
             backup_options["backupdir"] = args.backupdir
+        if args.backupignoredirs:
+            backup_options["backupignoredirs"] = args.backupignoredirs
         if args.sourcefile:
             backup_options["sourcefile"] = args.sourcefile
         if args.ncarfile:
@@ -94,6 +109,14 @@ def run():
         # if files are supplied, the directories are ignored
         backup = Backup(backup_options)
         backup.get_file_lists()
+        backup.get_files_to_copy()
+        if backup.dryrun:
+            print(f"dryrun:")
+            for _idx, _file in enumerate(sorted(backup.sourcefiles)):
+                print(backup.source_file_dict[_file])
+                if _idx > 100:
+                    break
+
 
     elif sys.argv[1] == "createfilelists":
         createfl_opt = {}
@@ -117,11 +140,6 @@ def run():
         sys.exit(1)
 
 
-    if "search" in args:
-        options["search"] = args.search
-
-
-    pass
 
 if __name__ == "__main__":
     run()
