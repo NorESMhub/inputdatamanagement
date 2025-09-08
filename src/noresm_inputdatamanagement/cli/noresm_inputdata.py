@@ -109,13 +109,8 @@ def run():
         # if files are supplied, the directories are ignored
         backup = Backup(backup_options)
         backup.get_file_lists()
-        backup.get_files_to_copy()
-        if backup.dryrun:
-            print(f"dryrun:")
-            for _idx, _file in enumerate(sorted(backup.sourcefiles)):
-                print(backup.source_file_dict[_file])
-                if _idx > 100:
-                    break
+        backup.get_source_files_to_copy()
+        backup.run_backup()
 
 
     elif sys.argv[1] == "createfilelists":

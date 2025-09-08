@@ -1,4 +1,6 @@
 import fnmatch
+import os
+import shutil
 
 from noresm_inputdatamanagement.const import SOURCE_PATH, NCAR_COPY_PATH, BACKUP_DESTINATION_PATH, \
     SOURCE_PATH_BASE_LENGTH, NCAR_COPY_PATH_BASE_LENGTH, BACKUP_DESTINATION_PATH_BASE_LENGTH, SOURCE_PATH_EXCLUDE_LIST
@@ -23,9 +25,49 @@ class Backup:
         self.ncarfiles = set()
         # set of files in the destination directory
         self.backupfiles = set()
+        # dict of target backup files to copy
+        # key is the absolute input file
+        # value is the absolute destination file name
+        self.target_file_dict = {}
 
-    def get_files_to_copy(self, source_path_depth:int = SOURCE_PATH_BASE_LENGTH, ):
-        """find files that are in the source file list, but not the NCAR copy """
+    def run_backup(self, method="shutil"):
+        """Method to actually run the backup
+
+        the method switch allows for different ways of copying
+        """
+        pass
+        self.get_target_files()
+        if method == "shutil":
+            # pure serial copying
+            lastdir = ''
+            for _source_file in self.target_file_dict:
+                if not self.dryrun:
+                    print(f"copying {_source_file} to {self.target_file_dict[_source_file]}")
+                    currdir = os.path.dirname(self.target_file_dict[_source_file])
+                    if currdir != lastdir:
+                        os.makedirs(currdir, exist_ok=True)
+                    lastdir = currdir
+                    shutil.copy2(_source_file, self.target_file_dict[_source_file])
+                else:
+                    print(f"would copy {_source_file} to {self.target_file_dict[_source_file]}")
+
+        elif method == "multithread":
+            # try a multithreaded approach
+            pass
+            raise NotImplementedError
+        else:
+            raise NotImplementedError
+
+    def get_target_files(self):
+        """small helper method to create a list of absolute target files"""
+        for _file in self.sourcefiles:
+            self.target_file_dict[self.source_file_dict[_file]] = os.path.join(BACKUP_DESTINATION_PATH, _file)
+
+
+    def get_source_files_to_copy(self, ):
+        """find files that are in the source file list, but not the NCAR copy
+        or at the backup destination
+        """
 
         # how to do it:
         # 1) remove files from source file list that are present already at the destination dir
@@ -33,8 +75,10 @@ class Backup:
 
         backup_files_removed = 0
         ncar_files_removed = 0
+        inputfiles = len(self.sourcefiles)
+
         for _destfile in self.backupfiles:
-            print(_destfile)
+            # print(_destfile)
             if _destfile in self.sourcefiles:
                 self.sourcefiles.remove(_destfile)
                 backup_files_removed += 1
@@ -44,6 +88,7 @@ class Backup:
                 self.sourcefiles.remove(_ncarfile)
                 ncar_files_removed += 1
 
+        print(f"Info: {inputfiles} potential source files were found in the inputdata folder.")
         print(f"Info: {backup_files_removed} source files were found in the backup folder.")
         print(f"Info: {ncar_files_removed} source files were found in the NCAR archive folder.")
         print(f"Info: This leaves {len(self.sourcefiles)} source files to be copied.")
