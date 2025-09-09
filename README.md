@@ -33,6 +33,24 @@ positional arguments:
 
 options:
   -h, --help            show this help message and exit
+  
+Example usages:
+        - dryrun for input data backup on betzy using the defaults:
+          noresm_inputdata backup --dryrun
+    
+          This will search the filesystems and therefore take some time. 
+    
+        - dryrun for input data backup file lists: 
+          noresm_inputdata backup --dryrun --sourcefile source_files.txt --ncarfile NCAR_files.txt --backupfile destination_files.txt
+    
+          Files are in the current directories, paths are from the default paths. 
+          For custom paths please add the --sourceignoredirs, --ncarignoredirs and --backupignoredirs switches if needed. 
+    
+        - dryrun for creating file lists:
+          noresm_inputdata createfilelists --dryrun
+    
+          This will show the find commands to create file lists used for the backup
+
 ```
 
 ### noresm_inputdata backup
