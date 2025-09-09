@@ -13,32 +13,33 @@ from tempfile import mkdtemp
 
 from noresm_inputdatamanagement.const import SOURCE_PATH, NCAR_COPY_PATH, BACKUP_DESTINATION_PATH, \
     SOURCE_PATH_BASE_LENGTH, NCAR_COPY_PATH_BASE_LENGTH, BACKUP_DESTINATION_PATH_BASE_LENGTH
+from noresm_inputdatamanagement.const import COLORS
 from noresm_inputdatamanagement.createfilelists import CreateFileLists
 from noresm_inputdatamanagement.backup import Backup
 
 
 
 def run():
-    colors = {
-        "BOLD": "\033[1m",
-        "UNDERLINE": "\033[4m",
-        "END": "\033[0m",
-        "PURPLE": "\033[95m",
-        "CYAN": "\033[96m",
-        "DARKCYAN": "\033[36m",
-        "BLUE": "\033[94m",
-        "GREEN": "\033[92m",
-        "YELLOW": "\033[93m",
-        "RED": "\033[91m",
-    }
 
     parser = argparse.ArgumentParser(
             description="manage noresm inputdata",
             formatter_class=argparse.RawDescriptionHelpFormatter,
-            epilog=f"""{colors['BOLD']}Example usages:{colors['END']}
-    \t{colors['UNDERLINE']}- basic usage:{colors['END']}
-    \t  The following line bla bla 
-    \t  noresm_inputdata -c blubb
+            epilog=f"""{COLORS['BOLD']}Example usages:{COLORS['END']}
+    \t{COLORS['UNDERLINE']}- dryrun for input data backup on betzy using the defaults:{COLORS['END']} 
+    \t  noresm_inputdata backup --dryrun
+    
+    \t  This will search the filesystems and therefore take some time. 
+    
+    \t{COLORS['UNDERLINE']}- dryrun for input data backup file lists:{COLORS['END']} 
+    \t  noresm_inputdata backup --dryrun --sourcefile source_files.txt --ncarfile NCAR_files.txt --backupfile destination_files.txt
+    
+    \t  Files are in the current directories, paths are from the default paths. 
+    \t  For custom paths please add the --sourceignoredirs, --ncarignoredirs and --backupignoredirs switches if needed. 
+    
+    \t{COLORS['UNDERLINE']}- dryrun for creating file lists:{COLORS['END']}
+    \t  noresm_inputdata createfilelists --dryrun
+    
+    \t  This will show the find commands to create file lists used for the backup
     
     """,
     )
@@ -57,7 +58,7 @@ def run():
 
 
 
-    parser_backup = subparsers.add_parser('backup', help='backup help')
+    parser_backup = subparsers.add_parser('backup',help='backup help', description='backup description')
 
     parser_backup.add_argument("--dryrun", help="dryrun; just show what would be done", action="store_true")
     parser_backup.add_argument("--sourcefile", help="text file with paths of the source directory", )

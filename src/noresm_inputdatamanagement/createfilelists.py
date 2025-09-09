@@ -2,7 +2,7 @@ import os
 
 from noresm_inputdatamanagement.const import (SOURCE_PATH,
                                               NCAR_COPY_PATH, BACKUP_DESTINATION_PATH, FIND_CMD, SOURCE_PATH_GROUPS_TO_COPY,
-                                              SOURCE_PATH_EXCLUDE_LIST)
+                                              SOURCE_PATH_EXCLUDE_LIST, COLORS)
 from pathlib import Path
 
 
@@ -57,13 +57,13 @@ class CreateFileLists:
         self.cmd_dest_arr = self.cmd_dest_arr + [FIND_CMD, backupdir, "-type", "f"]
 
         if self.dryrun:
-            print("command for source file list:")
+            print(f"{COLORS['UNDERLINE']}command for source file list:{COLORS['END']}")
             print(" ".join(map(str, self.cmd_source_arr)))
             print("")
-            print("command for creating the file list of the NCAR archive")
+            print(f"{COLORS['UNDERLINE']}command for creating the file list of the NCAR archive{COLORS['END']}")
             print(" ".join(map(str, self.cmd_ncar_arr)))
             print("")
-            print("command for creating the file list of the destination folder:")
+            print(f"{COLORS['UNDERLINE']}command for creating the file list of the destination folder:{COLORS['END']}")
             print(" ".join(map(str, self.cmd_dest_arr)))
             print("")
 
