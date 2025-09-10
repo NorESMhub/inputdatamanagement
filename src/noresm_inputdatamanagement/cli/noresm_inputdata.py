@@ -85,9 +85,7 @@ def run():
     if sys.argv[1] == "backup":
         backup_options = {}
         if args.dryrun:
-            backup_options["dryrun"] = True
-        else:
-            backup_options["dryrun"] = False
+            backup_options["dryrun"] = args.dryrun
         if args.sourcedir:
             backup_options["sourcedir"] = args.sourcedir
         if args.sourceignoredirs:
@@ -123,9 +121,7 @@ def run():
         if args.backupdir:
             createfl_opt["backupdir"] = args.backupdir
         if args.dryrun:
-            createfl_opt["dryrun"] = True
-        else:
-            createfl_opt["dryrun"] = False
+            createfl_opt["dryrun"] = args.dryrun
         if args.outputfolder:
             createfl_opt["outputfolder"] = args.outputfolder
 

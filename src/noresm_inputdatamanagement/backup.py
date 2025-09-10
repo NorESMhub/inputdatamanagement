@@ -4,7 +4,7 @@ import shutil
 
 from noresm_inputdatamanagement.const import SOURCE_PATH, NCAR_COPY_PATH, BACKUP_DESTINATION_PATH, \
     SOURCE_PATH_BASE_LENGTH, NCAR_COPY_PATH_BASE_LENGTH, BACKUP_DESTINATION_PATH_BASE_LENGTH, SOURCE_PATH_EXCLUDE_LIST
-
+from noresm_inputdatamanagement.createfilelists import CreateFileLists
 
 class Backup:
     __version__ = "0.0.1"
@@ -35,7 +35,6 @@ class Backup:
 
         the method switch allows for different ways of copying
         """
-        pass
         self.get_target_files()
         if method == "shutil":
             # pure serial copying
@@ -126,6 +125,7 @@ class Backup:
         """read all necessary file lists, either from the file system or by
         user provided text files"""
 
+        createfl = CreateFileLists(self.options)
 
         if "sourcefile" in self.options:
             with open(self.options["sourcefile"], "r") as source:
@@ -133,19 +133,19 @@ class Backup:
             self.sourcefiles = self.get_rel_paths(_tmp, self.options["sourceignoredirs"])
             self.sourcefiles = self.remove_excluded_files(self.sourcefiles, SOURCE_PATH_EXCLUDE_LIST)
         else:
-            raise NotImplementedError
+            self.sourcefiles = createfl.get_source_files_source()
 
         if "ncarfile" in self.options:
             with open(self.options["ncarfile"], "r") as ncar:
                 _tmp = set(ncar.read().splitlines())
             self.ncarfiles = self.get_rel_paths(_tmp, self.options["ncarignoredirs"])
         else:
-            raise NotImplementedError
+            self.ncarfiles = createfl.get_source_files_backup()
 
         if "backupfile" in self.options:
             with open(self.options["backupfile"], "r") as backup:
                 _tmp = set(backup.read().splitlines())
             self.backupfiles = self.get_rel_paths(_tmp, self.options["backupignoredirs"])
         else:
-            raise NotImplementedError
+            self.backupfiles = createfl.get_source_files_source()
 

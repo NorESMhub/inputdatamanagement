@@ -5,6 +5,22 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "noresm_inputdata.py backup dryrun text files",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "/cluster/home/jang/data/Python3/inputdatamanagement/src/noresm_inputdatamanagement/cli/noresm_inputdata.py",
+            "console": "integratedTerminal",
+            "args": ["backup", "--dryrun", "--sourcefile", "~/tmp/blubb.txt", "--ncarfile", "~/tmp/source_files.txt", "--backupfile", "~/tmp/destination_files.txt"]
+        },
+        {
+            "name": "noresm_inputdata.py backup dryrun",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "/cluster/home/jang/data/Python3/inputdatamanagement/src/noresm_inputdatamanagement/cli/noresm_inputdata.py",
+            "console": "integratedTerminal",
+            "args": ["backup", "--dryrun", ]
+        },
+        {
             "name": "noresm_inputdata.py createfilelists dryrun",
             "type": "debugpy",
             "request": "launch",
@@ -13,12 +29,12 @@
             "args": ["createfilelists", "--dryrun"]
         },
         {
-            "name": "noresm_inputdata.py backup dryrun",
+            "name": "noresm_inputdata.py createfilelists",
             "type": "debugpy",
             "request": "launch",
             "program": "/cluster/home/jang/data/Python3/inputdatamanagement/src/noresm_inputdatamanagement/cli/noresm_inputdata.py",
             "console": "integratedTerminal",
-            "args": ["backup", "--dryrun", "--sourcefile", "~/tmp/blubb.txt", "--ncarfile", "~/tmp/source_files.txt", "--backupfile", "~/tmp/destination_files.txt"]
+            "args": ["createfilelists", "--ncardir", "/nird/datalake/NS12077K/CESM-input-data/ice/dice6"]
         },
         {
             "name": "noresm_inputdata.py help",
