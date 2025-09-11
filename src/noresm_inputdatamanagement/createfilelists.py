@@ -105,11 +105,15 @@ class CreateFileLists:
         sh_result = subprocess.run(self.cmd_source_arr, capture_output=True)
         if sh_result.returncode != 0:
             print(f"return code: {sh_result.returncode}")
-            print(f"{sh_result.stderr}")
-            sys.exit(-1)
+            print(f"{sh_result.stderr.decode("utf-8").splitlines()}")
+            try:
+                sourcefiles = set(sh_result.stdout.decode("utf-8").splitlines())
+            except Exception:
+                sys.exit(-1)
         else:
             sourcefiles = set(sh_result.stdout.decode("utf-8").splitlines())
-            print(f"success... Found {len(self.sourcefiles)} files")
+            
+        print(f"success... Found {len(sourcefiles)} files")
 
         return sourcefiles
 

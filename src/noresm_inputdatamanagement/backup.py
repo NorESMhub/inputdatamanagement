@@ -16,6 +16,9 @@ class Backup:
         else:
             self.dryrun = False
 
+        self.test_flag = True
+
+
         # the following is a dictionary with the relative source path as key. and the absolute source path
         # as value
         self.source_file_dict = {}
@@ -92,6 +95,11 @@ class Backup:
         print(f"Info: {ncar_files_removed} source files were found in the NCAR archive folder.")
         print(f"Info: This leaves {len(self.sourcefiles)} source files to be copied.")
 
+        if self.test_flag:
+            with open("/cluster/home/jang/tmp/files_to_copy.txt", "w") as fh:
+                for _line in sorted(self.sourcefiles):
+                    fh.write(f"{_line}\n")
+
         return self.sourcefiles
 
     def get_rel_paths(self, paths:set[str], dirs_to_ignore:int = 0):
@@ -129,23 +137,24 @@ class Backup:
 
         if "sourcefile" in self.options:
             with open(self.options["sourcefile"], "r") as source:
-                _tmp = set(source.read().splitlines())
-            self.sourcefiles = self.get_rel_paths(_tmp, self.options["sourceignoredirs"])
-            self.sourcefiles = self.remove_excluded_files(self.sourcefiles, SOURCE_PATH_EXCLUDE_LIST)
+                self.sourcefiles = set(source.read().splitlines())
+            
         else:
             self.sourcefiles = createfl.get_source_files_source()
+        self.sourcefiles = self.get_rel_paths(self.sourcefiles, self.options["sourceignoredirs"])
+        self.sourcefiles = self.remove_excluded_files(self.sourcefiles, SOURCE_PATH_EXCLUDE_LIST)
 
         if "ncarfile" in self.options:
             with open(self.options["ncarfile"], "r") as ncar:
-                _tmp = set(ncar.read().splitlines())
-            self.ncarfiles = self.get_rel_paths(_tmp, self.options["ncarignoredirs"])
+                self.ncarfiles = set(ncar.read().splitlines())    
         else:
             self.ncarfiles = createfl.get_source_files_backup()
+        self.ncarfiles = self.get_rel_paths(self.ncarfiles, self.options["ncarignoredirs"])
 
         if "backupfile" in self.options:
             with open(self.options["backupfile"], "r") as backup:
-                _tmp = set(backup.read().splitlines())
-            self.backupfiles = self.get_rel_paths(_tmp, self.options["backupignoredirs"])
+                self.backupfiles = set(backup.read().splitlines())
         else:
             self.backupfiles = createfl.get_source_files_source()
+        self.backupfiles = self.get_rel_paths(self.backupfiles, self.options["backupignoredirs"])
 

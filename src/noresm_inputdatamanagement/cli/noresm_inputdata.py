@@ -82,55 +82,59 @@ def run():
     options = {}
     # Because we have sub parsers, only the attributes from the supplied sub parser
     # are part of args
-    if sys.argv[1] == "backup":
-        backup_options = {}
-        if args.dryrun:
-            backup_options["dryrun"] = args.dryrun
-        if args.sourcedir:
-            backup_options["sourcedir"] = args.sourcedir
-        if args.sourceignoredirs:
-            backup_options["sourceignoredirs"] = args.sourceignoredirs
-        if args.ncardir:
-            backup_options["ncardir"] = args.ncardir
-        if args.ncarignoredirs:
-            backup_options["ncarignoredirs"] = args.ncarignoredirs
-        if args.backupdir:
-            backup_options["backupdir"] = args.backupdir
-        if args.backupignoredirs:
-            backup_options["backupignoredirs"] = args.backupignoredirs
-        if args.sourcefile:
-            backup_options["sourcefile"] = args.sourcefile
-        if args.ncarfile:
-            backup_options["ncarfile"] = args.ncarfile
-        if args.backupfile:
-            backup_options["backupfile"] = args.backupfile
-        # apply some logic to the options:
-        # if files are supplied, the directories are ignored
-        backup = Backup(backup_options)
-        backup.get_file_lists()
-        backup.get_source_files_to_copy()
-        backup.run_backup()
+    try:
+        dummy = sys.argv[1]
+        if sys.argv[1] == "backup":
+            backup_options = {}
+            if args.dryrun:
+                backup_options["dryrun"] = args.dryrun
+            if args.sourcedir:
+                backup_options["sourcedir"] = args.sourcedir
+            if args.sourceignoredirs:
+                backup_options["sourceignoredirs"] = args.sourceignoredirs
+            if args.ncardir:
+                backup_options["ncardir"] = args.ncardir
+            if args.ncarignoredirs:
+                backup_options["ncarignoredirs"] = args.ncarignoredirs
+            if args.backupdir:
+                backup_options["backupdir"] = args.backupdir
+            if args.backupignoredirs:
+                backup_options["backupignoredirs"] = args.backupignoredirs
+            if args.sourcefile:
+                backup_options["sourcefile"] = args.sourcefile
+            if args.ncarfile:
+                backup_options["ncarfile"] = args.ncarfile
+            if args.backupfile:
+                backup_options["backupfile"] = args.backupfile
+            # apply some logic to the options:
+            # if files are supplied, the directories are ignored
+            backup = Backup(backup_options)
+            backup.get_file_lists()
+            backup.get_source_files_to_copy()
+            backup.run_backup()
 
 
-    elif sys.argv[1] == "createfilelists":
-        createfl_opt = {}
-        if args.sourcedir:
-            createfl_opt["sourcedir"] = args.sourcedir
-        if args.ncardir:
-            createfl_opt["ncardir"] = args.ncardir
-        if args.backupdir:
-            createfl_opt["backupdir"] = args.backupdir
-        if args.dryrun:
-            createfl_opt["dryrun"] = args.dryrun
-        if args.outputfolder:
-            createfl_opt["outputfolder"] = args.outputfolder
+        elif sys.argv[1] == "createfilelists":
+            createfl_opt = {}
+            if args.sourcedir:
+                createfl_opt["sourcedir"] = args.sourcedir
+            if args.ncardir:
+                createfl_opt["ncardir"] = args.ncardir
+            if args.backupdir:
+                createfl_opt["backupdir"] = args.backupdir
+            if args.dryrun:
+                createfl_opt["dryrun"] = args.dryrun
+            if args.outputfolder:
+                createfl_opt["outputfolder"] = args.outputfolder
 
-        createfl = CreateFileLists(createfl_opt)
-        createfl.get_source_files()
-    else:
+            createfl = CreateFileLists(createfl_opt)
+            createfl.get_source_files()
+        else:
+            parser.print_help()
+            sys.exit(1)
+    except IndexError:
         parser.print_help()
         sys.exit(1)
-
 
 
 if __name__ == "__main__":
