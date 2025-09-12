@@ -6,7 +6,7 @@ Manage backup of the noresm input data
 """
 
 import argparse
-import subprocess
+import os
 import sys
 from pathlib import Path
 from tempfile import mkdtemp
@@ -97,7 +97,7 @@ def run():
             if args.ncarignoredirs:
                 backup_options["ncarignoredirs"] = args.ncarignoredirs
             if args.backupdir:
-                backup_options["backupdir"] = args.backupdir
+                backup_options["backupdir"] = os.path.join(args.backupdir, "")
             if args.backupignoredirs:
                 backup_options["backupignoredirs"] = args.backupignoredirs
             if args.sourcefile:

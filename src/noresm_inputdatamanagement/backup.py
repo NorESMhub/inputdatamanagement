@@ -2,8 +2,14 @@ import fnmatch
 import os
 import shutil
 
-from noresm_inputdatamanagement.const import SOURCE_PATH, NCAR_COPY_PATH, BACKUP_DESTINATION_PATH, \
-    SOURCE_PATH_BASE_LENGTH, NCAR_COPY_PATH_BASE_LENGTH, BACKUP_DESTINATION_PATH_BASE_LENGTH, SOURCE_PATH_EXCLUDE_LIST
+import subprocess
+from tempfile import mkdtemp
+
+
+from noresm_inputdatamanagement.const import BACKUP_DESTINATION_PATH, \
+    SOURCE_PATH_EXCLUDE_LIST, \
+    TMP_DIR, RUN_UUID, RSYNC_CMD, RSYNC_CMD_ARR_START
+
 from noresm_inputdatamanagement.createfilelists import CreateFileLists
 
 class Backup:
@@ -17,6 +23,10 @@ class Backup:
             self.dryrun = False
 
         self.test_flag = True
+        if self.test_flag:
+            # create temp dir for rsync file
+            self.tempdir = mkdtemp(dir=TMP_DIR)
+            self.rsync_file = os.path.join(self.tempdir, f"rsync_file_list_{RUN_UUID}.txt")
 
 
         # the following is a dictionary with the relative source path as key. and the absolute source path
@@ -33,7 +43,7 @@ class Backup:
         # value is the absolute destination file name
         self.target_file_dict = {}
 
-    def run_backup(self, method="shutil"):
+    def run_backup(self, method="rsync"):
         """Method to actually run the backup
 
         the method switch allows for different ways of copying
@@ -53,10 +63,27 @@ class Backup:
                 else:
                     print(f"would copy {_source_file} to {self.target_file_dict[_source_file]}")
 
-        elif method == "multithread":
-            # try a multithreaded approach
-            pass
-            raise NotImplementedError
+        elif method == "rsync":
+            # use rsync to copy
+            # write temporary file list to be used by the rsync command
+            # add "./" between the source directory and the relative path
+            # to make rsync's -R switch work
+            with open(self.rsync_file, "w") as fh:
+                for _line in sorted(self.sourcefiles):
+                    fh.write(f"{os.path.join(self.options["sourcedir"], ".", _line)}\n")
+
+            print(f"wrote rsync file list {self.rsync_file}")
+
+            if self.dryrun:
+                self.rsync_cmd_arr = ["rsync", "-avn", f"--files-from={self.rsync_file}", "/", self.options["backupdir"]]
+            else:
+                self.rsync_cmd_arr = ["echo", "rsync", "-avn", f"--files-from={self.rsync_file}", "/", self.options["backupdir"]]
+            
+            print(f"running command {' '.join(map(str, self.rsync_cmd_arr))}...")
+            print("This might take a while...")
+            subprocess.run(self.rsync_cmd_arr, shell=True)
+
+            # raise NotImplementedError
         else:
             raise NotImplementedError
 
@@ -94,11 +121,6 @@ class Backup:
         print(f"Info: {backup_files_removed} source files were found in the backup folder.")
         print(f"Info: {ncar_files_removed} source files were found in the NCAR archive folder.")
         print(f"Info: This leaves {len(self.sourcefiles)} source files to be copied.")
-
-        if self.test_flag:
-            with open("/cluster/home/jang/tmp/files_to_copy.txt", "w") as fh:
-                for _line in sorted(self.sourcefiles):
-                    fh.write(f"{_line}\n")
 
         return self.sourcefiles
 
