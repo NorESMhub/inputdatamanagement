@@ -43,8 +43,10 @@ NCAR_COPY_PATH_BASE_LENGTH = len(NCAR_COPY_PATH.split("/"))
 # destination of the backup
 # files below SOURCE_PATH, that are NOT present at NCAR_COPY_PATH will be
 # copied here
-BACKUP_DESTINATION_PATH = "/nird/projects/NS9560K/www/inputdata"
+# BACKUP_DESTINATION_PATH = "/nird/projects/NS9560K/www/inputdata"
+BACKUP_DESTINATION_PATH = "/nird/datalake/NS16001B/cdl-ns16001b-NorESMInputdata"
 BACKUP_DESTINATION_PATH_BASE_LENGTH = len(BACKUP_DESTINATION_PATH.split("/"))
+BACKUP_DESTINATION_GROUP = "ns16001b"
 
 # find command
 FIND_CMD = "find"
@@ -66,4 +68,6 @@ RSYNC_CMD = "rsync"
 # not be abbreviated.) For older rsync versions, you would need to use a chdir to limit the source path.
 # rsync -avR --rsync-path="cd /a/b && rsync" host:c/d /e/
 # rsync -avR --rsync-path="cd /foo; rsync" remote:bar/baz.c /tmp/
+# for testing: 
+# rsync -avn --files-from="${HOME}/tmp/rsync_files_to_copy.txt" --chown :noresm --chmod=Dg+s,ug+w,Fo-w,+X  / 
 RSYNC_CMD_ARR_START = ["rsync", "-"]
