@@ -8,7 +8,7 @@ from tempfile import mkdtemp
 
 from noresm_inputdatamanagement.const import BACKUP_DESTINATION_PATH, \
     SOURCE_PATH_EXCLUDE_LIST, \
-    TMP_DIR, RUN_UUID, RSYNC_CMD, RSYNC_CMD_ARR_START
+    TMP_DIR, RUN_UUID, BACKUP_DESTINATION_GROUP, RSYNC_CMD, RSYNC_CMD_ARR_START
 
 from noresm_inputdatamanagement.createfilelists import CreateFileLists
 
@@ -77,7 +77,8 @@ class Backup:
             if self.dryrun:
                 self.rsync_cmd_arr = ["rsync", "-avn", f"--files-from={self.rsync_file}", "/", self.options["backupdir"]]
             else:
-                self.rsync_cmd_arr = ["echo", "rsync", "-avn", f"--files-from={self.rsync_file}", "/", self.options["backupdir"]]
+                self.rsync_cmd_arr = ["rsync", "-av", f"--files-from={self.rsync_file}", f"--chown :{BACKUP_DESTINATION_GROUP}",
+                                      "--chmod=Dg+s,ug+w,Fo-w,+X", "/", self.options["backupdir"]]
             
             print(f"running command {' '.join(map(str, self.rsync_cmd_arr))}...")
             print("This might take a while...")
@@ -170,13 +171,13 @@ class Backup:
             with open(self.options["ncarfile"], "r") as ncar:
                 self.ncarfiles = set(ncar.read().splitlines())    
         else:
-            self.ncarfiles = createfl.get_source_files_backup()
+            self.ncarfiles = createfl.get_source_files_ncar()
         self.ncarfiles = self.get_rel_paths(self.ncarfiles, self.options["ncarignoredirs"])
 
         if "backupfile" in self.options:
             with open(self.options["backupfile"], "r") as backup:
                 self.backupfiles = set(backup.read().splitlines())
         else:
-            self.backupfiles = createfl.get_source_files_source()
+            self.backupfiles = createfl.get_source_files_backup()
         self.backupfiles = self.get_rel_paths(self.backupfiles, self.options["backupignoredirs"])
 
