@@ -2,18 +2,29 @@
 collection of Python scripts (just one for the moment) for NorESM inputdata management for the different sigma2 machines
 
 ## Purpose
-This project provides a command line tool for inputdata management for the NorESM model. As a fist step it will facilitate 
+This project provides a command line tool for inputdata management for the NorESM model. As a first step it will facilitate 
 the syncing between the HPCs (`betzy` for now) and the `nird` storage infrastructure according this discussion 
 https://github.com/NorESMhub/NorESM/discussions/712
+
+It's mainly a frontend for the tools `find` and `rsync` and will 
+- create a rsync suitable file list file containing the files to sync using rsync's `--files-from` option
+- set permissions right (`--chmod=Dg+s,ug+w,Fo-w,+X`) in rsync terms
+- set group ownership right (`--chown :ns16001b`)
+
+It also provides a dryrun option with and some information about which commands are run in the background.
 
 ## Installation
 Standard installation is done via pip:
 
+```
 python -m pip install 'git+https://github.com/NorESMhub/inputdatamanagement.git'
+```
 
 For a different branch than main
 
+```
 python -m pip install 'git+https://github.com/NorESMhub/inputdatamanagement.git@<branch name>'
+```
 
 
 ## Prerequests
@@ -77,7 +88,7 @@ options:
                         source folder; defaults to /cluster/shared/noresm/inputdata
   --ncardir NCARDIR     NCAR folder; defaults to /nird/datalake/NS12077K/CESM-input-data
   --backupdir BACKUPDIR
-                        backup (destination) folder; defaults to /nird/projects/NS9560K/www/inputdata
+                        backup (destination) folder; defaults to /nird/datalake/NS16001B/cdl-ns16001b-NorESMInputdata
                         
 ```
 ### noresm_inputdata createfilelists
@@ -95,11 +106,16 @@ options:
                         source folder; defaults to /cluster/shared/noresm/inputdata
   --ncardir NCARDIR     NCAR folder; defaults to /nird/datalake/NS12077K/CESM-input-data
   --backupdir BACKUPDIR
-                        backup (destination) folder; defaults to /nird/projects/NS9560K/www/inputdata
+                        backup (destination) folder; defaults to /nird/datalake/NS16001B/cdl-ns16001b-NorESMInputdata
   --dryrun              dryrun; just show what would be done
 ```
 
 Example:
+- most likely command you want to run
+```
+noresm_inputdata backup
+```
+This will gather all information online (search for all files) and backup everything the default backup location
 
 ## Development process
 -  no committing to main branch; use PRs for that.
