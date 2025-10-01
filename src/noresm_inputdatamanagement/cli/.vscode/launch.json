@@ -30,7 +30,16 @@
             "program": "/cluster/home/jang/data/Python3/inputdatamanagement/src/noresm_inputdatamanagement/cli/noresm_inputdata.py",
             "console": "integratedTerminal",
             "python": "/cluster/home/jang/miniforge3/envs/inputdatasync/bin/python",
-            "args": ["backup", "--ncarfile", "~/tmp/NCAR_files.txt", "--backupfile", "~/tmp/destination_files.txt"]
+            "args": ["backup", "--ncarfile", "~/tmp/20251001/NCAR_files.txt", "--backupfile", "~/tmp/20251001/destination_files.txt"]
+        },
+        {
+            "name": "noresm_inputdata.py online backup",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "/cluster/home/jang/data/Python3/inputdatamanagement/src/noresm_inputdatamanagement/cli/noresm_inputdata.py",
+            "console": "integratedTerminal",
+            "python": "/cluster/home/jang/miniforge3/envs/inputdatasync/bin/python",
+            "args": ["backup"]
         },
         {
             "name": "noresm_inputdata.py createfilelists dryrun",
