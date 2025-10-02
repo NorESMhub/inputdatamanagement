@@ -80,8 +80,8 @@ class Backup:
             else:
                 timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
                 rsync_log_file = os.path.join(RSYNC_LOG_DIR, f"rsync_log_{timestamp}_{RUN_UUID}.txt")
-                self.rsync_cmd_arr = ["rsync", "-av", f"--files-from={self.rsync_file}", f"--chown", f":{BACKUP_DESTINATION_GROUP}",
-                                      "--chmod=Dg+s,ug+w,Fo-w,+X", f"--log-file={rsync_log_file}", "/", self.options["backupdir"]]
+                self.rsync_cmd_arr = ["rsync", "-av", f"--files-from={self.rsync_file}", f"--chown=:{BACKUP_DESTINATION_GROUP}",
+                                      "--chmod=Do+rx,Dg+xs,ug+w,Fo-wx,Fo+r,Fug-x", f"--log-file={rsync_log_file}", "/", self.options["backupdir"]]
             
             print(f"running command {' '.join(map(str, self.rsync_cmd_arr))}...")
             print("This might take a while...")
