@@ -4,11 +4,12 @@ import shutil
 
 import subprocess
 from tempfile import mkdtemp
+from datetime import datetime
 
 
 from noresm_inputdatamanagement.const import BACKUP_DESTINATION_PATH, \
     SOURCE_PATH_EXCLUDE_LIST, \
-    TMP_DIR, RUN_UUID, BACKUP_DESTINATION_GROUP, RSYNC_CMD, RSYNC_CMD_ARR_START
+    TMP_DIR, RUN_UUID, BACKUP_DESTINATION_GROUP, RSYNC_LOG_DIR, RSYNC_CMD, RSYNC_CMD_ARR_START
 
 from noresm_inputdatamanagement.createfilelists import CreateFileLists
 
@@ -77,14 +78,15 @@ class Backup:
             if self.dryrun:
                 self.rsync_cmd_arr = ["rsync", "-avn", f"--files-from={self.rsync_file}", "/", self.options["backupdir"]]
             else:
-                self.rsync_cmd_arr = ["rsync", "-av", f"--files-from={self.rsync_file}", f"--chown :{BACKUP_DESTINATION_GROUP}",
-                                      "--chmod=Dg+s,ug+w,Fo-w,+X", "/", self.options["backupdir"]]
+                timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+                rsync_log_file = os.path.join(RSYNC_LOG_DIR, f"rsync_log_{timestamp}_{RUN_UUID}.txt")
+                self.rsync_cmd_arr = ["rsync", "-av", f"--files-from={self.rsync_file}", f"--chown", f":{BACKUP_DESTINATION_GROUP}",
+                                      "--chmod=Dg+s,ug+w,Fo-w,+X", f"--log-file={rsync_log_file}", "/", self.options["backupdir"]]
             
             print(f"running command {' '.join(map(str, self.rsync_cmd_arr))}...")
             print("This might take a while...")
             subprocess.run(self.rsync_cmd_arr, shell=True)
 
-            # raise NotImplementedError
         else:
             raise NotImplementedError
 
