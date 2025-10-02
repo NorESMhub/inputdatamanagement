@@ -78,7 +78,7 @@ class CreateFileLists:
                 sys.exit(-1)
         else:
             ncarfiles = set(sh_result.stdout.decode("utf-8").splitlines())
-            print(f"success... Found {len(self.ncarfiles)} files")
+            print(f"success... Found {len(ncarfiles)} files")
         return ncarfiles
 
     def get_source_files_backup(self,):
@@ -97,7 +97,7 @@ class CreateFileLists:
                 sys.exit(-1)
         else:
             backupfiles = set(sh_result.stdout.decode("utf-8").splitlines())
-            print(f"success... Found {len(self.backupfiles)} files")
+            print(f"success... Found {len(backupfiles)} files")
         
         return backupfiles
 
