@@ -85,7 +85,8 @@ class Backup:
             
             print(f"running command {' '.join(map(str, self.rsync_cmd_arr))}...")
             print("This might take a while...")
-            subprocess.run(self.rsync_cmd_arr, shell=True)
+            # subprocess.run(self.rsync_cmd_arr, shell=True)
+            subprocess.run(' '.join(map(str, self.rsync_cmd_arr)), shell=True)
 
         else:
             raise NotImplementedError
