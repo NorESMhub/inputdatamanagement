@@ -71,3 +71,6 @@ RSYNC_CMD = "rsync"
 # for testing: 
 # rsync -avn --files-from="${HOME}/tmp/rsync_files_to_copy.txt" --chown :noresm --chmod=Dg+s,ug+w,Fo-w,+X  / 
 RSYNC_CMD_ARR_START = ["rsync", "-"]
+
+# default srync log directory
+RSYNC_LOG_DIR = "/nird/datalake/NS16001B/rsync_log"
