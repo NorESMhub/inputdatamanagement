@@ -16,12 +16,12 @@ It's mainly a frontend for the tools `find` and `rsync` and will
 - write a rsync log file (default location is `/nird/datalake/NS16001B/rsync_log`)
 
 Default data directory locations:
-Source input data (betzy): `/cluster/shared/noresm/inputdata`
-NCAR copy directory: `/nird/datalake/NS12077K/CESM-input-data`
-backup target directory: `/nird/datalake/NS16001B/cdl-ns16001b-NorESMInputdata`
+- Source input data (betzy): `/cluster/shared/noresm/inputdata`
+- NCAR copy directory: `/nird/datalake/NS12077K/CESM-input-data`
+- backup target directory: `/nird/datalake/NS16001B/cdl-ns16001b-NorESMInputdata`
 
 Files that match the following patterns are NOT copied:
-`[".svn/*", "*/.svn/*", "*.lock", "*cplhist/noresm3_0/*"]`
+- `[".svn/*", "*/.svn/*", "*.lock", "*cplhist/noresm3_0/*"]`
 
 
 
