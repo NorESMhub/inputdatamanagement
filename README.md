@@ -6,10 +6,24 @@ This project provides a command line tool for inputdata management for the NorES
 the syncing between the HPCs (`betzy` for now) and the `nird` storage infrastructure according this discussion 
 https://github.com/NorESMhub/NorESM/discussions/712
 
+Main point: Don't copy NCAR data that has been stored in the project `NS12077K` already 
+(located at `/nird/datalake/NS12077K/CESM-input-data`).
+
 It's mainly a frontend for the tools `find` and `rsync` and will 
-- create a rsync suitable file list file containing the files to sync using rsync's `--files-from` option
-- set permissions right (`--chmod=Dg+s,ug+w,Fo-w,+X`) in rsync terms
+- create a rsync suitable file list containing the files to sync using rsync's `--files-from` option
+- set permissions right (`Do+rx,Dg+xs,ug+w,Fo-wx,Fo+r,Fug-x`) in rsync/chmod terms
 - set group ownership right (`--chown :ns16001b`)
+- write a rsync log file (default location is `/nird/datalake/NS16001B/rsync_log`)
+
+Default data directory locations:
+Source input data (betzy): `/cluster/shared/noresm/inputdata`
+NCAR copy directory: `/nird/datalake/NS12077K/CESM-input-data`
+backup target directory: `/nird/datalake/NS16001B/cdl-ns16001b-NorESMInputdata`
+
+Files that match the following patterns are NOT copied:
+`[".svn/*", "*/.svn/*", "*.lock", "*cplhist/noresm3_0/*"]`
+
+
 
 It also provides a dryrun option with and some information about which commands are run in the background.
 
@@ -28,7 +42,14 @@ python -m pip install 'git+https://github.com/NorESMhub/inputdatamanagement.git@
 
 
 ## Prerequests
-Python >= 3.11
+- Python >= 3.11
+- resonable modern rsync (support for `--chmod` and `--chown` command line options)
+
+## Most likely call
+In case you want to run the backup with defaults, just run
+```
+noresm_inputdata backup
+```
 
 ## Minimal documentation
 ```
@@ -65,7 +86,7 @@ Example usages:
 ```
 
 ### noresm_inputdata backup
-```bash
+```
 [jang@login-1.BETZY ~]$ noresm_inputdata backup -h
 usage: noresm_inputdata backup [-h] [--dryrun] [--sourcefile SOURCEFILE] [--sourceignoredirs SOURCEIGNOREDIRS] [--ncarfile NCARFILE] [--ncarignoredirs NCARIGNOREDIRS] [--backupfile BACKUPFILE]
                                [--backupignoredirs BACKUPIGNOREDIRS] [--sourcedir SOURCEDIR] [--ncardir NCARDIR] [--backupdir BACKUPDIR]
@@ -94,7 +115,7 @@ options:
 ### noresm_inputdata createfilelists
 This is mainly useful for testing during development or when setting up backup on a new machine.
 
-```bash
+```plain text
 [jang@login-1.BETZY ~]$ noresm_inputdata createfilelists -h
 usage: noresm_inputdata createfilelists [-h] [-o OUTPUTFOLDER] [--sourcedir SOURCEDIR] [--ncardir NCARDIR] [--backupdir BACKUPDIR] [--dryrun]
 
