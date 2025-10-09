@@ -1,0 +1,90 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        
+        {
+            "name": "noresm_inputdata.py backup dryrun text files",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "/cluster/home/jang/data/Python3/inputdatamanagement/src/noresm_inputdatamanagement/cli/noresm_inputdata.py",
+            "console": "integratedTerminal",
+            "python": "/cluster/home/jang/miniforge3/envs/inputdatasync/bin/python",
+            "args": ["backup", "--dryrun", "--sourcefile", "~/tmp/blubb.txt", "--ncarfile", "~/tmp/NCAR_files.txt", "--backupfile", "~/tmp/destination_files.txt"]
+        },
+        {
+            "name": "noresm_inputdata.py backup dryrun",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "/cluster/home/jang/data/Python3/inputdatamanagement/src/noresm_inputdatamanagement/cli/noresm_inputdata.py",
+            "console": "integratedTerminal",
+            "python": "/cluster/home/jang/miniforge3/envs/inputdatasync/bin/python",
+            "args": ["backup", "--dryrun", ]
+        },
+        {
+            "name": "noresm_inputdata.py backup",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "/cluster/home/jang/data/Python3/inputdatamanagement/src/noresm_inputdatamanagement/cli/noresm_inputdata.py",
+            "console": "integratedTerminal",
+            "python": "/cluster/home/jang/miniforge3/envs/inputdatasync/bin/python",
+            "args": ["backup", "--ncarfile", "~/tmp/20251001/NCAR_files.txt", "--backupfile", "~/tmp/20251001/destination_files.txt"]
+        },
+        {
+            "name": "noresm_inputdata.py online backup",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "/cluster/home/jang/data/Python3/inputdatamanagement/src/noresm_inputdatamanagement/cli/noresm_inputdata.py",
+            "console": "integratedTerminal",
+            "python": "/cluster/home/jang/miniforge3/envs/inputdatasync/bin/python",
+            "args": ["backup"]
+        },
+        {
+            "name": "noresm_inputdata.py createfilelists dryrun",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "/cluster/home/jang/data/Python3/inputdatamanagement/src/noresm_inputdatamanagement/cli/noresm_inputdata.py",
+            "console": "integratedTerminal",
+            "python": "/cluster/home/jang/miniforge3/envs/inputdatasync/bin/python",
+            "args": ["createfilelists", "--dryrun"]
+        },
+        {
+            "name": "noresm_inputdata.py createfilelists",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "/cluster/home/jang/data/Python3/inputdatamanagement/src/noresm_inputdatamanagement/cli/noresm_inputdata.py",
+            "console": "integratedTerminal",
+            "python": "/cluster/home/jang/miniforge3/envs/inputdatasync/bin/python",
+            "args": ["createfilelists", "--ncardir", "/nird/datalake/NS12077K/CESM-input-data/ice/dice6"]
+        },
+        {
+            "name": "noresm_inputdata.py help",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "/cluster/home/jang/data/Python3/inputdatamanagement/src/noresm_inputdatamanagement/cli/noresm_inputdata.py",
+            "console": "integratedTerminal",
+            "python": "/cluster/home/jang/miniforge3/envs/inputdatasync/bin/python",
+            "args": ["-h"]
+        },
+        {
+            "name": "noresm_inputdata.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "/cluster/home/jang/data/Python3/inputdatamanagement/src/noresm_inputdatamanagement/cli/noresm_inputdata.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "python": "/cluster/home/jang/miniforge3/envs/inputdatasync/bin/python",
+            "args": []
+        },
+        {
+            "name": "Python Debugger: Current File with Arguments",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "args": "${command:pickArgs}"
+        }
+    ]
+}
