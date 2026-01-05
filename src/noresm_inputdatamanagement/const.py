@@ -33,7 +33,7 @@ SOURCE_PATH_GROUPS_TO_COPY = ["noresm"]
 # list of exclude patterns (file notation at this point)
 # Will be applied even when supplying a file list of the source files
 # might become a regular expression in the future
-SOURCE_PATH_EXCLUDE_LIST = [".svn/*", "*/.svn/*", "*.lock", "*cplhist/noresm3_0/*"]
+SOURCE_PATH_EXCLUDE_LIST = [".svn/*", "*/.svn/*", "*.lock", "*cplhist/noresm3_0/*", "*cicero_mods*"]
 # path with NCAR copy
 # if a file from SOURCE_PATH is listed here, it will NOT be copied
 # to BACKUP_DESTINATION_PATH

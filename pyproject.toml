@@ -1,6 +1,6 @@
 [project]
 name = "noresm-inputdatamanagement"
-version = "0.1.2"
+version = "0.1.3"
 description = "command line tool for NorESM input data management on sigma2 ressources"
 authors = [
     {name = "Jan Griesfeller",email = "jan.griesfeller@met.no"}
